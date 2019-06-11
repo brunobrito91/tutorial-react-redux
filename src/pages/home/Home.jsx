@@ -1,107 +1,49 @@
-import React from 'react';
-import { Card, Col, Row } from 'antd';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { onFetchStudents } from '../../redux/actions/students';
 
-const Home = () => (
-  <div>
-    <Row gutter={16}>
-      <Col span={24}>
-        <Card
-          title="Card title"
-          className="margin-bottom-16"
-          bordered={false}
-        >
-          Card content
-        </Card>
-      </Col>
-    </Row>
-    <Row gutter={16}>
-      <Col span={8}>
-        <Card
-          title="Card title"
-          className="margin-bottom-16"
-          bordered={false}
-        >
-          Card content
-        </Card>
-      </Col>
-      <Col span={8}>
-        <Card
-          title="Card title"
-          className="margin-bottom-16"
-          bordered={false}
-        >
-          Card content
-        </Card>
-      </Col>
-      <Col span={8}>
-        <Card
-          title="Card title"
-          className="margin-bottom-16"
-          bordered={false}
-        >
-          Card content
-        </Card>
-      </Col>
-    </Row>
-    <Row gutter={16}>
-      <Col span={12}>
-        <Card
-          title="Card title"
-          className="margin-bottom-16"
-          bordered={false}
-        >
-          Card content
-        </Card>
-      </Col>
-      <Col span={12}>
-        <Card
-          title="Card title"
-          className="margin-bottom-16"
-          bordered={false}
-        >
-          Card content
-        </Card>
-      </Col>
-    </Row>
-    <Row gutter={16}>
-      <Col span={6}>
-        <Card
-          title="Card title"
-          className="margin-bottom-16"
-          bordered={false}
-        >
-          Card content
-        </Card>
-      </Col>
-      <Col span={6}>
-        <Card
-          title="Card title"
-          className="margin-bottom-16"
-          bordered={false}
-        >
-          Card content
-        </Card>
-      </Col>
-      <Col span={6}>
-        <Card
-          title="Card title"
-          className="margin-bottom-16"
-          bordered={false}
-        >
-          Card content
-        </Card>
-      </Col>
-      <Col span={6}>
-        <Card
-          title="Card title"
-          className="margin-bottom-16"
-          bordered={false}
-        >
-          Card content
-        </Card>
-      </Col>
-    </Row>
-  </div>
-);
+class Home extends Component {
+  static propTypes = {
+    students: PropTypes.objectOf(PropTypes.any),
+    onFetchStudents: PropTypes.func.isRequired,
+  };
 
-export default Home;
+  static defaultProps = {
+    students: {},
+  };
+
+  componentWillMount() {
+    this.props.onFetchStudents();
+  }
+
+  renderStudents = () => {
+    const posts = this.props.students.ids.map(id => (
+      <div key={id}>
+        <h3>{this.props.students.content[id].name}</h3>
+        <hr />
+      </div>
+    ));
+    return posts;
+  };
+
+  render() {
+    console.log(this.props);
+    return (
+      <div>
+        <h1>Students</h1>
+        {this.renderStudents()}
+      </div>
+    );
+  }
+}
+
+const mapStateToProps = ({ students }) => ({
+  students,
+});
+
+const mapDispatchToProps = {
+  onFetchStudents,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
